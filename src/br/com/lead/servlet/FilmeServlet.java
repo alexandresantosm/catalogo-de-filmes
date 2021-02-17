@@ -28,6 +28,8 @@ public class FilmeServlet extends HttpServlet {
 		
 		filmes.addAll(Arrays.asList(coringa, matrix, forrestGump));
 		
+		String genero = req.getParameter("genero");
+		
 		res.setContentType("text/HTML");
 		
 		PrintWriter out = res.getWriter();
@@ -36,10 +38,13 @@ public class FilmeServlet extends HttpServlet {
 		
 		out.println("<ol>");
 		
-		filmes.forEach(filme -> {
-			out.println(String.format("<li>Nome: %s <br>", filme.getNome()));
-			out.println(String.format("Gênero: %s <br>", filme.getNome()));
-			out.println(String.format("Ano: %s </li>", filme.getNome()));
+		filmes
+			.stream()
+				.filter(filme -> filme.getGenero().toUpperCase().equals(genero.toUpperCase()))
+					.forEach(filme -> {
+					out.println(String.format("<li>Nome: %s <br>", filme.getNome()));
+					out.println(String.format("Gênero: %s <br>", filme.getGenero()));
+					out.println(String.format("Ano: %s </li>", filme.getAno()));
 		});
 		
 		out.println("<ol>");
