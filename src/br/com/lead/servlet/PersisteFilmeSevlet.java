@@ -2,6 +2,7 @@ package br.com.lead.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,6 +13,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 
+import br.com.lead.modelo.Autor;
 import br.com.lead.modelo.Filme;
 
 @WebServlet("/persistir-filme")
@@ -25,12 +27,19 @@ public class PersisteFilmeSevlet extends HttpServlet {
 		String genero = req.getParameter("genero");
 		Integer ano = Integer.valueOf(req.getParameter("ano"));
 		
+		String nomeAutor = req.getParameter("nomeAutor");
+		LocalDate dataNascimentoAutor = LocalDate.parse(req.getParameter("dataNascimentoAutor"));
+		
+		Autor autor = new Autor(nomeAutor, dataNascimentoAutor);
+		
 		Filme filme = new Filme(nome, genero, ano);
+		filme.setAutor(autor);
 		
 		EntityManagerFactory emf = Persistence.createEntityManagerFactory("catalogodefilmes");
 		EntityManager em = emf.createEntityManager();
 		
 		em.getTransaction().begin();
+		em.persist(autor);
 		em.persist(filme);
 		em.getTransaction().commit();
 		
