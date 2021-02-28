@@ -5,8 +5,6 @@ import java.io.PrintWriter;
 import java.time.LocalDate;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -15,8 +13,9 @@ import javax.servlet.http.HttpServlet;
 
 import br.com.lead.modelo.Autor;
 import br.com.lead.modelo.Filme;
+import br.com.lead.util.JPAUtil;
 
-@WebServlet("/persistir-filme")
+@WebServlet("/persistirFilme")
 public class PersisteFilmeSevlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -35,8 +34,7 @@ public class PersisteFilmeSevlet extends HttpServlet {
 		Filme filme = new Filme(nome, genero, ano);
 		filme.setAutor(autor);
 		
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("catalogodefilmes");
-		EntityManager em = emf.createEntityManager();
+		EntityManager em = JPAUtil.getEntityManager();
 		
 		em.getTransaction().begin();
 		em.persist(autor);
@@ -44,7 +42,6 @@ public class PersisteFilmeSevlet extends HttpServlet {
 		em.getTransaction().commit();
 		
 		em.close();
-		emf.close();
 		
 		PrintWriter out = res.getWriter();
 		out.println("Filme cadastrado com sucesso!");
